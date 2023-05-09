@@ -289,6 +289,7 @@ def active(ax,ay,N,theta):
         ax[i] = ax[i]+v0*np.cos(theta[i])
         ay[i] = ay[i]+v0*np.sin(theta[i])  
 
+
 def binary_a(a,sigma,N,ly,N1,AL):
     N1_num=0
     for i in range(0,N-1,2):
@@ -342,7 +343,29 @@ rx=np.loadtxt(data_file,comments="#" ,usecols=0)
 ry=np.loadtxt(data_file,comments="#" , usecols=1)
 
 
-np.savez('nu{0}.npz'.format(nu), rx=rx, ry=ry, sigma=sigma)
+typeid=np.zeros(N)
+set_radius=list(set(sigma))
+print(set_radius)
+print(set_radius[0])
+
+for i in range(N):
+    if sigma[i]==set_radius[0]:
+        typeid[i]=0
+    elif sigma[i]==set_radius[1]:
+        typeid[i]=1
+
+print(typeid)
+
+
+
+
+print(sigma[0])
+sigma=[n*2 for n in sigma]
+print(sigma[0])
+
+
+
+np.savez('nu{0}.npz'.format(nu), rx=rx, ry=ry, sigma=sigma,typeid=typeid)
 
 # print(sigma)
 # Figureを作成
@@ -361,20 +384,37 @@ from matplotlib.patches import Circle
 
 for i in range(len(rx)):
     # Circleパッチを作成
-    if (sigma[i]>0.3):
+    if (sigma[i]>set_radius[0]*2):
         c="r"
     else:
         c="b"
 
-    circle = Circle((rx[i], ry[i]), sigma[i], color=c)
+    circle = Circle((rx[i], ry[i]), sigma[i]/2, color=c)
     # CircleパッチをAxesに追加
     ax.add_patch(circle)
+    # ax.annotate(typeid[i],xy=(rx[i],ry[i]))
+
 
 ax.set_title("nu={0}".format(nu))
 
 plt.savefig("nu{0}.png".format(nu))
 
 print("OK")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 with open('DE/'+str(Nx)+'/'+str(int(nu*1000))+'/analy_data/f_info.dat') as f:
     for i in range(12):
