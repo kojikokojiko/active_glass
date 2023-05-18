@@ -27,6 +27,8 @@ nu=float(sys.argv[1])
 pl=float(sys.argv[2])
 fixed_percent=float(sys.argv[3])
  
+ 
+random.seed(12)
 # this section is fixed  #############
 #particle parameter
 Nx = 64

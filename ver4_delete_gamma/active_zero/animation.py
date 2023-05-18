@@ -4,6 +4,7 @@ import sys
 ver=1
 nu=float(sys.argv[1])
 pl=float(sys.argv[2])
+fixed_percent=float(sys.argv[3])
 
 # N=2500
 
@@ -11,7 +12,7 @@ pl=float(sys.argv[2])
 # rotate_dif=format(rotate_dif,'.6f')
 # rho=format(rho,'.2f')
 # va=format(va,'.2f')
-ver=str(nu)+"_"+str(pl)
+ver=str(nu)+"_"+str(pl)+"_"+str(fixed_percent)
 main_dir="./"+ver
 print(main_dir)
 
