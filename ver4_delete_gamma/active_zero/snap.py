@@ -28,7 +28,7 @@ main_dir="./"+ver
 
 # temp_dir="./"+ver+"/log_pos_"+ver+".gsd"
 temp_dir="./"+ver+"/log_pos_"+ver+".gsd"
-figuredir=main_dir+"/figure"
+figuredir=main_dir+"/figure_scat"
 # i_phi_dir=main_dir+"/i_phi"
 if not os.path.exists(figuredir): os.makedirs(figuredir)
 # if not os.path.exists(i_phi_dir): os.makedirs(i_phi_dir)
@@ -50,9 +50,13 @@ plt.figure(figsize=figsize)
 NP=len(traj[0].particles.position)
 print(NP)
 
-sigma=1.0
+diameter=traj[0].particles.diameter
+
+
+small_index=np.where(diameter==min(diameter))
+large_index=np.where(diameter==max(diameter))
 # あんま頭よくない処理
-size=sigma
+size_list=diameter/2.0
 
 
 bo=(lx/0.4)
@@ -91,7 +95,7 @@ xsize=xmax-xmin
 fact=ax_point/xsize
 
 # scatterのマーカーサイズは直径のポイントの二乗を描くため、実スケールの半径をポイントに変換し直径にしておく
-size*=2*fact
+size_list*=2*fact
 
 ####################################################
 
@@ -144,7 +148,8 @@ for t in range(len(traj)-1,0,-2):
 
     # 二乗にして与える 
     # im=ax.scatter(rx,ry,s=size**2,c=phi6_2,cmap="cool", linewidths=0)
-    im=ax.scatter(rx,ry,s=size**2,c="r", linewidths=0)
+    ax.scatter(rx[small_index],ry[small_index],s=size_list[small_index]**2,c="r", linewidths=1,ec="g")
+    ax.scatter(rx[large_index],ry[large_index],s=size_list[large_index]**2,c="b", linewidths=1,ec="g") 
     # im1=ax.scatter(extract_rx1,extract_ry1,s=size**2,c="blue", linewidths=0)
     # im2=ax.scatter(extract_rx2,extract_ry2,s=size**2,c="c", linewidths=0)
     # im3=ax.scatter(extract_rx3,extract_ry3,s=size**2,c="m", linewidths=0)
@@ -164,8 +169,8 @@ for t in range(len(traj)-1,0,-2):
     # for i in range(100,200):
     #     ax.text(rx[i], ry[i], i,fontsize="small")
 
-    c=pat.Circle(xy=(lx/4-lx/2,ly/2-ly/2),radius=static_dia/2,fc="b")
-    ax.add_patch(c) 
+    # c=pat.Circle(xy=(lx/4-lx/2,ly/2-ly/2),radius=static_dia/2,fc="b")
+    # ax.add_patch(c) 
     # plt.colorbar(im,ticks=[0.0,0.2,0.4 ,0.6,0.75,0.8])
 
     ax.set_xlim(xmin,xmax)

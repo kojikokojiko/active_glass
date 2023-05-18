@@ -27,6 +27,8 @@ nu=float(sys.argv[1])
 pl=float(sys.argv[2])
 fixed_percent=float(sys.argv[3])
  
+
+random.seed(12)
 # this section is fixed  #############
 #particle parameter
 Nx = 64
@@ -65,13 +67,13 @@ gamma_r=kbT/DR
 
 # 刻み幅小さすぎの可能性もあるから大きめにしてみてもいいかも
 
-real_time=80
+real_time=10
 dt = 4.0e-5
 nsteps=int(real_time/dt)
 pos_hout=int(nsteps/500)
 # thermo_hout=int(nsteps/2.0)
 
-data_file="../data/nu{0}.npz".format(nu)
+data_file="../../data/nu{0}.npz".format(nu)
 
 npz=np.load(data_file)
 
@@ -169,7 +171,7 @@ lj.r_cut[("large", "large")] = 2**(1/6)*sigma_ll
 #???????
 brownian = hoomd.md.methods.Brownian(filter=hoomd.filter.Tags(move_id), kT=kbT)
 brownian.gamma.default = gamma
-brownian.gamma_r.default =[gamma_r,gamma_r,0]
+brownian.gamma_r.default =[gamma_r,gamma_r,gamma_r]
 # brownian.gamma_r.default = np.full((3,), ktemp / rotational_diffusion)
 active = hoomd.md.force.Active(filter=hoomd.filter.Tags(move_id))
 
@@ -240,6 +242,10 @@ os.chdir("../")
 
 traj = gsd.hoomd.open('./'+ver+'/log_pos_'+ver+'.gsd', 'rb')
 
+
+for i in range(len(traj)):
+    orientation=traj[i].particles.orientation[0]
+    print(orientation)
 
 # traj = gsd.hoomd.open('log_force2d_'+ver+'.gsd', 'rb')
 

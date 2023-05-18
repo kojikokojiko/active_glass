@@ -229,7 +229,7 @@ sim.run(0)
 print("-----run--------")
 second_time=time.time()
 
-sim.run(nsteps)
+# sim.run(nsteps)
 
 print(time.time()-first_time)
 
@@ -241,54 +241,59 @@ os.chdir("../")
 traj = gsd.hoomd.open('./'+ver+'/log_pos_'+ver+'.gsd', 'rb')
 
 
-# traj = gsd.hoomd.open('log_force2d_'+ver+'.gsd', 'rb')
+
+for i in range(len(traj)):
+    orientation=traj[i].particles.orientation[0]
+    print(orientation)
+
+# # traj = gsd.hoomd.open('log_force2d_'+ver+'.gsd', 'rb')
 
 
-output_dir=main_dir+"/figure_2d"
-if not os.path.exists(output_dir): os.makedirs(output_dir)
-figsize=(10,10)
-plt.figure(figsize=figsize,dpi=150)
+# output_dir=main_dir+"/figure_2d"
+# if not os.path.exists(output_dir): os.makedirs(output_dir)
+# figsize=(10,10)
+# plt.figure(figsize=figsize,dpi=150)
 
-print(len(traj))
-sigma=traj[0].particles.diameter
-set_sigma=list(set(sigma))
+# print(len(traj))
+# sigma=traj[0].particles.diameter
+# set_sigma=list(set(sigma))
 
-for t in range(len(traj)-1,0,-2):
-    print(t)
-    bx=plt.axes()
-    plt.axis([-lx/2,lx/2,-ly/2,ly/2])
-    position=traj[t].particles.position
+# for t in range(len(traj)-1,0,-2):
+#     print(t)
+#     bx=plt.axes()
+#     plt.axis([-lx/2,lx/2,-ly/2,ly/2])
+#     position=traj[t].particles.position
    
-    for i in range(N):
-        # print(i)
+#     for i in range(N):
+#         # print(i)
 
-            # Circleパッチを作成
-        if (sigma[i]==set_sigma[0]):
-            c="r"
-        else:
-            c="b"
+#             # Circleパッチを作成
+#         if (sigma[i]==set_sigma[0]):
+#             c="r"
+#         else:
+#             c="b"
 
-        c=pat.Circle(xy=(position[i][0],position[i][1]),radius=sigma[i]/2,fc=c)
-        bx.add_patch(c)
+#         c=pat.Circle(xy=(position[i][0],position[i][1]),radius=sigma[i]/2,fc=c)
+#         bx.add_patch(c)
 
-    plt.title("step"+str(t))
-    plt.savefig(output_dir+"/figure{0}.png".format(t))
-    plt.cla()
-    plt.clf()
+#     plt.title("step"+str(t))
+#     plt.savefig(output_dir+"/figure{0}.png".format(t))
+#     plt.cla()
+#     plt.clf()
 
-    ############アニメーション################    
-images=[]
-# image_num=sum(os.path.isfile(os.path.join(pic_output name)) for name in os.listdir(pic_output))
-image_num=sum(os.path.isfile(os.path.join(output_dir,name))for name in os.listdir(output_dir))
-print(image_num)
-for i in range(0,image_num):
-    file_name=output_dir+"/figure"+str(i)+".png"
-    im=Image.open(file_name)
-    images.append(im)
+#     ############アニメーション################    
+# images=[]
+# # image_num=sum(os.path.isfile(os.path.join(pic_output name)) for name in os.listdir(pic_output))
+# image_num=sum(os.path.isfile(os.path.join(output_dir,name))for name in os.listdir(output_dir))
+# print(image_num)
+# for i in range(0,image_num):
+#     file_name=output_dir+"/figure"+str(i)+".png"
+#     im=Image.open(file_name)
+#     images.append(im)
 
-gif_output_dir=main_dir+"/abpgif2"
+# gif_output_dir=main_dir+"/abpgif2"
 
-if not os.path.exists(gif_output_dir): os.makedirs(gif_output_dir)
-images[0].save(gif_output_dir+"/out_ela2.gif",save_all=True,append_images=images[1:],loop=0,duration=10)
+# if not os.path.exists(gif_output_dir): os.makedirs(gif_output_dir)
+# images[0].save(gif_output_dir+"/out_ela2.gif",save_all=True,append_images=images[1:],loop=0,duration=10)
     
     
