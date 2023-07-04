@@ -1,0 +1,5 @@
+Command terminated by signal 15
+3217.08user 0.75system 53:43.33elapsed 99%CPU (0avgtext+0avgdata 524624maxresident)k
+30504inputs+8outputs (418major+80680minor)pagefaults 0swaps
+os.path.isfile(os.path.join(pic_output,name))for name in os.listdir(pic_output))
+FileNotFoundError: [Errno 2] No such file or directory: './0.6_10.0_0.3/figure_2d'

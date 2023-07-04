@@ -60,10 +60,10 @@ def gd_mp(gd_map, gd_mx, gd_my):
 def ls5_grid(ls5_gd):
     for i in range(0,N):
         for m in range(0,60):
-	        j=gd_map[bc_x[gd_mx[i]+ls5_x[m]]][bc_y[gd_my[i]+ls5_y[m]]]
-	        if j != -1:
-		        ls5_gd[m][i]=j
-		        ls5_gd[119-m][j]=i
+            j=gd_map[bc_x[gd_mx[i]+ls5_x[m]]][bc_y[gd_my[i]+ls5_y[m]]]
+            if j != -1:
+                ls5_gd[m][i]=j
+                ls5_gd[119-m][j]=i
 
 def radian(x0,y0,x1,y1):
     dx01=x1-x0
@@ -186,10 +186,12 @@ LY = Ly
 #sigma = np.loadtxt('sigma_list.dat')
 Mol_small, Mol_large = 2, 1 ###モル比
 Sigma_ratio = 1.4
-Density = 0.78     ###占有率
-Sigma_small = np.sqrt(Density*64*64*(Mol_large+Mol_small)/4096/np.pi/(Mol_large*Sigma_ratio**2 + Mol_small))
-Sigma_large = Sigma_ratio * Sigma_small
-sigma = np.full(N, Sigma_large)
+# Density = 0.78     ###占有率
+# Sigma_small = np.sqrt(Density*64*64*(Mol_large+Mol_small)/4096/np.pi/(Mol_large*Sigma_ratio**2 + Mol_small))
+# Sigma_large = Sigma_ratio * Sigma_small
+
+
+# sigma = np.full(N, Sigma_large)
 sigma_decision = []
 with open('sigma_init' + '.txt') as f:
     for line in f:
@@ -274,6 +276,13 @@ for dis in range(1,11):
     p = str(dis)
 #    pos_all = np.loadtxt('dis_over_new'+p+'.dat')
     pos_all = np.loadtxt('./dataset/'+par_occ+'/initial_pos/'+par_occ+'_'+p+'.dat')
+    
+    # [N*framce0,次元数2]
+
+    # [[x,y]*4096*frame0]
+    #  
+    # 
+
     
     for i in range(frame0):
         for k in range(4096):
