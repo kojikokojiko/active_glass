@@ -24,7 +24,10 @@ images=[]
 # image_num=sum(os.path.isfile(os.path.join(pic_output name)) for name in os.listdir(pic_output))
 image_num=sum(os.path.isfile(os.path.join(pic_output,name))for name in os.listdir(pic_output))
 print(image_num)
-for i in range(1,image_num,10):
+
+
+image_out_period=20
+for i in range(image_out_period*image_num-1,0,-image_out_period):
     file_name=pic_output+"/figure"+str(i)+".png"
     im=Image.open(file_name)
     images.append(im)

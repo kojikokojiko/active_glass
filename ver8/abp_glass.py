@@ -30,8 +30,8 @@ fixed_percent=float(sys.argv[3])
  
  
  
- 
-random.seed(12)
+seed=12
+random.seed(seed)
 # this section is fixed  #############
 #particle parameter
 Nx = 64
@@ -62,9 +62,9 @@ DTrans=1.0
 # 刻み幅小さすぎの可能性もあるから大きめにしてみてもいいかも
 
 # 総時間幅
-real_time=500
+real_time=250
 # 出力を始めるまでの時間幅＝＞平衡状態に達するまでの時間
-after_time=50
+after_time=20
 # 出力をしている時間幅
 pos_out_time=(real_time-after_time)
 # 刻み時間
@@ -86,7 +86,7 @@ pos_out_steps=round(pos_out_time/dt)
 # num_out=int(pos_out_steps/pos_out_steps_period)
 ########################################################総出力回数調整
 # 総出力回数
-num_out=int(100000)
+num_out=int(50000)
 # 出力をしているときのステップ数の間隔
 pos_out_steps_period=int(pos_out_steps/num_out)
 ##############################################################
@@ -184,7 +184,7 @@ main_dir="./"+ver
 if not os.path.exists(main_dir): os.makedirs(main_dir)
 
 # バージョン変えた時は必ずここをいじる
-media_dir="/media/isobelab2022/data/active_glass/ver7"
+media_dir="/media/isobelab2022/data/active_glass/ver8_"+str(seed)
 traj_dir=media_dir+"/"+ver
 if not os.path.exists(traj_dir): os.makedirs(traj_dir)
 
@@ -235,7 +235,7 @@ snapshot.configuration.box = [lx, ly, 0, 0, 0, 0]
 
 
 
-sim = hoomd.Simulation(device=hoomd.device.GPU(), seed=12)
+sim = hoomd.Simulation(device=hoomd.device.GPU(), seed=seed)
 
 sim.create_state_from_snapshot(snapshot)
 # Integration information

@@ -2,9 +2,9 @@
 
 
 
-nu_list=(0.6 0.75 0.8)
+nu_list=(0.7 0.75 0.8)
 # 0.55 0.6 0.65 0.7 0.75 0.8)
-v0_list=( )
+v0_list=( 1.0 3.0 5.0 7.0 10.0 )
 fixed_per_list=(0.0)
 
 for nu in "${nu_list[@]}"
@@ -15,8 +15,8 @@ do
         do
         echo $nu $v0  $fixed_per
         name="${nu}_${v0}_${fixed_per}"
-        # nohup time python abp_glass.py $nu $v0 $fixed_per> ${name}.log 2>&1 &
-        python animation.py $nu $v0 $fixed_per> ${name}.log 2>&1 &
+        nohup time python abp_glass.py $nu $v0 $fixed_per> ${name}.log 2>&1 &
+        # python animation.py $nu $v0 $fixed_per> ${name}.log 2>&1 &
         done
     done
 done

@@ -23,17 +23,17 @@ import pickle
 
 
 nu=float(sys.argv[1])
-v0=float(sys.argv[3])
 fixed_percent=float(sys.argv[2])
-
+kbT=float(sys.argv[3])
 L=64
- 
+LX=L
+LY=L
 
-media_dir="/media/isobelab2022/data/active_glass/ver7"
+media_dir="/media/isobelab2022/data/normal_glass/ver2"
 
 
 
-ver=str(nu)+"_"+str(v0)+"_"+str(fixed_percent)
+ver=str(nu)+"_"+str(fixed_percent)+"_"+str(kbT)
 main_dir="./"+ver
 
 
@@ -65,75 +65,63 @@ all_pos=[traj[i].particles.position for i in range(len(traj)-1)]
 all_pos=np.array(all_pos)
 # posは（時間、粒子数、3次元[x,y,z]）の次元になっている。
 
-print(len(all_pos))
 
-print(all_pos.shape)
+N = all_pos.shape[1]
+T=all_pos.shape[0]
 
-# posの次元を（3次元、時間、粒子数）に変換する。
-all_pos=np.transpose(all_pos,(2,0,1))
-
-print(all_pos.shape)
+print(N,T)
 
 
-# 次元は（粒子数、時間）
-rx=all_pos[0]
-ry=all_pos[1]
-# rz=pos[2]
 
 
-# (N,T)=rx.shape
-
-N = rx.shape[0]
-T=rx.shape[1]
-
-msd_list = []
-ngp_list = []
-isf_list=[]
-for t in range(T):
-    m2=0.0
-    m4=0.0
-
-    for i in range(N):
-        dx=rx[i][t]-rx[i][0]
-        dy=ry[i][t]-ry[i][0]
-
-
-        m2_element=dx*dx+dy*dy
-        m4_element=m2_element*m2_element
-        m2 += m2_element
-        m4 += m4_element
-        
-            
-    m2 /= N
-    m4 /= N
-
-    msd = m2 / ((small_sigma) ** 2)
-# 初回だけngp=0とする
-    if (t==0):
-        ngp=0
+def w(distance):
+    if distance<=0.3*small_sigma:
+        return distance
     else:
-        ngp = ((m4/(m2**2))/2) - 1 
-        
+        return 0
+
+
+
+
+def periodic_distance(r1, r2, L):
+    # Calculate the distance between two points in a periodic boundary system
+    dr = r2 - r1
+    dr = dr - L * np.round(dr / L)
+    return np.sqrt(np.sum(dr**2))
+
+
+
+def Q(t, r, L):
+    N = len(r)
+    sum_ = 0
+    for j in range(N):
+        for i in range(N):
+            distance = periodic_distance(r[j, 0], r[i, t], L)
+            sum_ += w(distance)
+    return sum_/N
+
+
+
+
+Qt=[]
+chi4_t=[]
+for t in range(T):
+    Q_t =Q(t,all_pos[t],L)
+    Q_2_t =Q(t,all_pos[t],L)**2
     
-    k = 2 * (np.pi)
-    isf = np.exp(-k**2 * msd / 4)
+    Q_2_t_avg = np.mean(Q_2_t) # This needs to be calculated from multiple realizations
+    Q_t_avg = np.mean(Q_t) # This needs to be calculated from multiple realizations
     
-    msd_list.append(msd)
-    ngp_list.append(ngp)
-    isf_list.append(isf)
-
-
-msd_list=np.array(msd_list)
-np.savez(traj_dir+"/msd.npz",msd_list=msd_list,zerod_time=zerod_time)
-
-
-msd_list=np.array(ngp_list)
-np.savez(traj_dir+"/ngp.npz",ngp_list=ngp_list,zerod_time=zerod_time)
-
-
-
-msd_list=np.array(ngp_list)
-np.savez(traj_dir+"/isf.npz",isf_list=isf_list,zerod_time=zerod_time)
+    chi4 = (V /(N**2 *kbT))* (Q_2_t_avg - Q_t_avg**2)
+    
+    chi4_t.append(chi4)
+    
+    
+            
+            
+    
+chi4_t=np.array(chi4_t)
+np.savez(main_dir+"/chi4_t.npz",chi4_t=chi4_t,zerod_time=zerod_time)
 
 print("FiNISH")
 
